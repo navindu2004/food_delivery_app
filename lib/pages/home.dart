@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterapp_02/widget/widget_support.dart';
+import 'details.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -53,31 +54,36 @@ class _HomeState extends State<Home> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(children: [
-                Container(
-                  margin: EdgeInsets.all(4),
-                  child: Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: EdgeInsets.all(14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                        Image.asset(
-                          "images/shawarma.png",
-                          height: 150,
-                          width: 150,
-                          fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Details()));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(4),
+                    child: Material(
+                      elevation: 5.0,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: EdgeInsets.all(14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Image.asset(
+                            "images/shawarma.png",
+                            height: 150,
+                            width: 150,
+                            fit: BoxFit.cover,
+                            ),
+                          Text("Chicken Shawarma",
+                          style: AppWidget.semiBoldTextFieldStyle()),
+                          SizedBox(height: 5.0,
                           ),
-                        Text("Chicken Shawarma",
-                        style: AppWidget.semiBoldTextFieldStyle()),
-                        SizedBox(height: 5.0,
-                        ),
-                        Text("Fresh and Healthy",style: AppWidget.LightTextFieldStyle(),),
-                        SizedBox(height: 5.0,
-                        ),
-                        Text("\Rs. 950", style: AppWidget.semiBoldTextFieldStyle(),)
-                      ],),
+                          Text("Fresh and Healthy",style: AppWidget.LightTextFieldStyle(),),
+                          SizedBox(height: 5.0,
+                          ),
+                          Text("\Rs. 950", style: AppWidget.semiBoldTextFieldStyle(),)
+                        ],),
+                      ),
                     ),
                   ),
                 ),
