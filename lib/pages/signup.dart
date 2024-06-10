@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 // import 'package:flutterapp_02/services/sharedpref.dart';
 import 'package:flutterapp_02/pages/bottomnav.dart';
 import 'package:flutterapp_02/pages/login.dart';
+import 'package:flutterapp_02/service/database.dart';
+import 'package:flutterapp_02/service/shared_pref.dart';
 import 'package:flutterapp_02/widget/widget_support.dart';
+import 'package:random_string/random_string.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp_02/service/shared_pref.dart';
 import 'package:flutterapp_02/services/auth.dart';
 import 'package:flutterapp_02/services/sharedpref.dart';
+import 'package:random_string/random_string.dart';
 
 
 class Profile extends StatefulWidget {
