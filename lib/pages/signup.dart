@@ -1,45 +1,74 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutterapp_02/pages/bottomnav.dart';
-import 'package:flutterapp_02/pages/forgotpassword.dart';
-import 'package:flutterapp_02/pages/signup.dart';
-import 'package:flutterapp_02/widget/widget_support.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutterapp_02/services/database.dart';
+// import 'package:flutterapp_02/services/sharedpref.dart';
+import 'package:flutterapp_02/pages/bottomnav.dart';
+import 'package:flutterapp_02/pages/login.dart';
+import 'package:flutterapp_02/widget/widget_support.dart';
 
-class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<LogIn> createState() => _LogInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LogInState extends State<LogIn> {
-  String email = "", password = "";
+class _SignUpState extends State<SignUp> {
+  String email = "", password = "", name = "";
+
+  TextEditingController namecontroller = new TextEditingController();
+
+  TextEditingController passwordcontroller = new TextEditingController();
+
+  TextEditingController mailcontroller = new TextEditingController();
 
   final _formkey = GlobalKey<FormState>();
 
-  TextEditingController useremailcontroller = new TextEditingController();
-  TextEditingController userpasswordcontroller = new TextEditingController();
+  registration() async {
+    if (password != null) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password);
 
-  userLogin() async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BottomNav()));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar((SnackBar(
+            backgroundColor: Colors.redAccent,
             content: Text(
-          "No User Found for that Email",
-          style: TextStyle(fontSize: 18.0, color: Colors.black),
-        )));
-      } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-          "Wrong Password Provided by User",
-          style: TextStyle(fontSize: 18.0, color: Colors.black),
-        )));
+              "Registered Successfully",
+              style: TextStyle(fontSize: 20.0),
+            ))));
+        String Id = randomAlphaNumeric(10);
+        Map<String, dynamic> addUserInfo = {
+          "Name": namecontroller.text,
+          "Email": mailcontroller.text,
+          "Wallet": "0",
+          "Id": Id,
+        };
+        await DatabaseMethods().addUserDetail(addUserInfo, Id);
+        await SharedPreferenceHelper().saveUserName(namecontroller.text);
+        await SharedPreferenceHelper().saveUserEmail(mailcontroller.text);
+        await SharedPreferenceHelper().saveUserWallet('0');
+        await SharedPreferenceHelper().saveUserId(Id);
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => BottomNav()));
+      } on FirebaseException catch (e) {
+        if (e.code == 'weak-password') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                "Password Provided is too Weak",
+                style: TextStyle(fontSize: 18.0),
+              )));
+        } else if (e.code == "email-already-in-use") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                "Account Already exsists",
+                style: TextStyle(fontSize: 18.0),
+              )));
+        }
       }
     }
   }
@@ -80,7 +109,7 @@ class _LogInState extends State<LogIn> {
                 children: [
                   Center(
                       child: Image.asset(
-                    "images/logoak.png",
+                    "images/aklogoak.png",
                     width: MediaQuery.of(context).size.width / 1.5,
                     fit: BoxFit.cover,
                   )),
@@ -93,7 +122,7 @@ class _LogInState extends State<LogIn> {
                     child: Container(
                       padding: EdgeInsets.only(left: 20.0, right: 20.0),
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 2,
+                      height: MediaQuery.of(context).size.height / 1.8,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20)),
@@ -105,17 +134,33 @@ class _LogInState extends State<LogIn> {
                               height: 30.0,
                             ),
                             Text(
-                              "Login",
+                              "Sign up",
                               style: AppWidget.HeadlineTextFieldStyle(),
                             ),
                             SizedBox(
                               height: 30.0,
                             ),
                             TextFormField(
-                              controller: useremailcontroller,
+                              controller: namecontroller,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please Enter Email';
+                                  return 'Please Enter Name';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: 'Name',
+                                  hintStyle: AppWidget.semiBoldTextFieldStyle(),
+                                  prefixIcon: Icon(Icons.person_outlined)),
+                            ),
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            TextFormField(
+                              controller: mailcontroller,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please Enter E-mail';
                                 }
                                 return null;
                               },
@@ -128,7 +173,7 @@ class _LogInState extends State<LogIn> {
                               height: 30.0,
                             ),
                             TextFormField(
-                              controller: userpasswordcontroller,
+                              controller: passwordcontroller,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please Enter Password';
@@ -142,35 +187,18 @@ class _LogInState extends State<LogIn> {
                                   prefixIcon: Icon(Icons.password_outlined)),
                             ),
                             SizedBox(
-                              height: 20.0,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ForgotPassword()));
-                              },
-                              child: Container(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    "Forgot Password?",
-                                    style: AppWidget.semiBoldTextFieldStyle(),
-                                  )),
-                            ),
-                            SizedBox(
                               height: 80.0,
                             ),
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 if (_formkey.currentState!.validate()) {
                                   setState(() {
-                                    email = useremailcontroller.text;
-                                    password = userpasswordcontroller.text;
+                                    email = mailcontroller.text;
+                                    name = namecontroller.text;
+                                    password = passwordcontroller.text;
                                   });
                                 }
-                                userLogin();
+                                registration();
                               },
                               child: Material(
                                 elevation: 5.0,
@@ -183,7 +211,7 @@ class _LogInState extends State<LogIn> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: Text(
-                                    "LOGIN",
+                                    "SIGN UP",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 18.0,
@@ -204,10 +232,10 @@ class _LogInState extends State<LogIn> {
                   GestureDetector(
                       onTap: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignUp()));
+                            MaterialPageRoute(builder: (context) => LogIn()));
                       },
                       child: Text(
-                        "Don't have an account? Sign up",
+                        "Already have an account? Login",
                         style: AppWidget.semiBoldTextFieldStyle(),
                       ))
                 ],

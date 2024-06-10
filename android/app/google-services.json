@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50038736405",
+    "project_id": "arabianknightsapp",
+    "storage_bucket": "arabianknightsapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50038736405:android:a363998188cf20e6c3301c",
+        "android_client_info": {
+          "package_name": "com.example.flutterapp_02"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG9qC3EenwmRaxVrlZnXny2DfA37W4hEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

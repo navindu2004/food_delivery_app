@@ -17,18 +17,18 @@ class _BottomNavState extends State<BottomNav> {
 
   late List<Widget> pages;
   late Widget currentPage;
-  late Home homePage;
+  late Home homepage;
   late Profile profile;
   late Order order;
   late Wallet wallet;
 
   @override
   void initState() {
-    homePage = Home();
+    homepage = Home();
     order = Order();
     profile = Profile();
     wallet = Wallet();
-    pages = [homePage, order, wallet, profile];
+    pages = [homepage, order, wallet, profile];
     super.initState();
   }
 
@@ -61,9 +61,9 @@ class _BottomNavState extends State<BottomNav> {
             Icon(
               Icons.person_outline,
               color: Colors.white,
-            ),
+            )
           ]),
-          body: pages[currentTabIndex],
+      body: pages[currentTabIndex],
     );
   }
 }
